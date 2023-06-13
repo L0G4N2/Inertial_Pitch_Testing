@@ -1,1 +1,36 @@
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*    Module:       main.cpp                                                  */
+/*    Author:       {author}                                                  */
+/*    Created:      {date}                                                    */
+/*    Description:  V5 project                                                */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
 
+// Include the V5 Library
+#include "vex.h"
+  
+// Allows for easier use of the VEX Library
+using namespace vex;
+
+// Setting the Inertial sensor 
+  inertial Inertial10 = inertial(PORT10);
+// Robot configuration code.
+  motor LeftMotor = motor(PORT1, ratio18_1, false);
+  motor RightMotor = motor(PORT3, ratio18_1, true);
+
+
+
+int main() {
+  Inertial10.calibrate();
+  while (Inertial10.isCalibrating()){
+    wait(100, msec);
+  }
+  if (Inertial10.orientation(pitch, degrees) >=5.0 ) {
+    LeftMotor.spin(forward);
+    RightMotor.spin(forward);
+  }
+  waitUntil((Inertial10.orientation(pitch, degrees) == 0));
+  LeftMotor.stop();
+  RightMotor.stop();
+}
